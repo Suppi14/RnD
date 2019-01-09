@@ -1,0 +1,19 @@
+%!TEX root = ../report.tex
+\chapter{Approach}
+
+\section{Overview}
+As mentioned in "section popov", the main functionality of the solver is to handle the task constraints or specifications and minimize the gauss function to resolve them thus producing control commands. The \cite{shakhimardanov2015} mentions the implementation for the above but fails to check the conditions for the manipulator being in singularity. There are mainly two reasons from which we could infer that the kinematic chain reaches singular configuration. The first one is that the kinematic chain when not be able to generate desired task specifications. The other reason is that the task constraints mentioned at end effector are not independent of each other.\cite{shakhimardanov2015} According to the current implementation in \cite{shakhimardanov2015} the authors suggest that the solution to these above cases of can be handled by weighted pseudo inverse method "where singularity values will be checked by values closer to zero:-edit is not appropriate.\cite{Buss2004} The joint forces obtained through this method solves for acceleration constraints by weighting the Lagrange multiplier/ magnitude of constraint forces or the cartesian acceleration of the end effector.\cite{shakhimardanov2015}. So the approach tries to determine singularities early and efficiently within the solver, considering the above reasons as motivation.	
+gskjgjkhlkjebfkjfb
+\section{Initial Experimental Setup}
+\section{Extension of Popov Vereshchagin Solver to handle ill conditions for the case of singularity}
+\section{For Decompositions - Mathematical core}
+%Handle positive semi definite,
+%Symmetric shape exploit,
+%Rank one update,
+%Rank revealing,
+%Computational complexity,
+%Numerical Stability,
+%Decomposition techniques 4 or 5 , LDL/Cholesky, SVD, LU, QR, RRQR, may be tick them and reference to the papers which indicate them.
+%"http://simbaforrest.github.io/blog/2016/03/25/LDLT-for-checking-positive-semidefinite-matrix-singularity.html" Refer this link. 
+
+\section{Lessons Learned/Drawbacks during implementation}

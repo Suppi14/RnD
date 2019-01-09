@@ -1,0 +1,211 @@
+%
+% LaTeX2e Style for MAS R&D and master thesis reports
+% Author: Argentina Ortega Sainz, Hochschule Bonn-Rhein-Sieg, Germany
+% Please feel free to send issues, suggestions or pull requests to:
+% https://github.com/mas-group/project-report
+% Based on the template created by Ronni Hartanto in 2003
+%
+
+%\documentclass[thesis]{mas_report}
+\documentclass[rnd]{mas_report}
+
+% ****************************************************
+% THIS INFORMATION SHOULD BE UPDATED FOR YOUR REPORT
+% ****************************************************
+\author{Supriya Vadiraj}
+\title{Singularity detection in the Vereshchagin hybrid dynamics solver}
+\supervisors{%
+Prof. Dr. Paul G. Pl{\"o}ger\\
+M.Sc. Sven Schneider\\
+}
+\date{January 2019}
+
+
+% \thirdpartylogo{path/to/your/image}
+
+\begin{document}
+\begin{titlepage}
+    \maketitle
+\end{titlepage}
+
+%----------------------------------------------------------------------------------------
+%	PREFACE
+%----------------------------------------------------------------------------------------
+
+\pagestyle{plain}
+
+
+\cleardoublepage
+\statementpage
+%
+\begin{abstract}
+	In the field of robot manipulation, singularities can be defined as state in which robot is incapable to moving its end effector regardless of its movements in joints. The workspace of the robot is bounded by singularities. The analysis, thus forms a very critical step in manipulator design. There can be two situations derived out of occurrence of singularities, one such situation is to seek singularity and the other is to avoid them. This is based on their level of evaluations conducted on forces or motions.
+	
+	
+	This project extends the existing Popov Vereshchagin hybrid dynamics solver to detect singularities occurring at runtime or to detect if it is close to singularity. The solver only relies on considering the dynamics primitives available in the existing solver to detect singularities. The solver after extension should be able to provide a feedback as a separation of concern between detection mechanism and policy of exploiting the decision. 
+	%The original solver is unaware of the concept of Kinematic Jacobians which is the traditional method to detect singularities. It only relies on considering the dynamics primitives available in the existing solver to detect singularities. The solver after extension should be able to provide a feedback as a separation of concern between detection mechanism and policy of exploiting the decision. 
+	
+	
+	In this work, a detailed hypothesis has been performed over situations where singularities could possibly occur within the solver. The evaluation has been performed over a KUKA-LWR (7R) manipulator model in simulation to validate the desired results in the case of singular configurations, where they satisfy the required task constraints and their equivalence with the traditional methodology. \color{red}future work\color{black}
+%     The main objective is to extend the available Vereschchagin hybrid dynamics solver to detect the singularities which might occur at runtime.
+%     A standard industrial manipulator robot reaches kinematic singularity when the robot is incapable of moving the end effector in particular directions irrespective of its movements in its joints.
+%     The existing methods for detecting singularity are based on kinematic level.
+%     But the solver only considers the robot’s dynamics and therefore is unaware of the concept of kinematic Jacobians.
+%     Hence the "traditional" means of singularity detection do not apply.
+%     We need other means to detect singularity that rely on the dynamics primitives available in the existing solver.
+%     Moreover depending on the tasks performed by the robot, two situations could be of concern, firstly avoiding singularity, and second exploiting singularity.
+%     In many cases, robot manipulators are required to perform tasks under contact with objects or environment. The endpoint of the manipulator is in contact with the environment.
+%     We have several examples describing the above situation, one of them can be by considering a robot which is required to push heavy loads and is also in contact with the object.
+%     In these situations a mechanical advantage can be realized for eg: load-bearing capacity.
+%     The motivation behind the problem is also in exploiting singularities in the context of tasks and which allows the robot to minimize energy consumption.
+%     Different types of hybrid dynamic solvers, such as Popov-Vereshchagin algorithm, are derived from optimization problem, which results in the absence of Jacobian matrix and thus requires other means of detection.
+%     However, detection of singularities at runtime on an algorithmic level can be %performed.
+%     This can be done by inspecting the matrices related to the robot’s dynamics.
+%     Since each singularity is associated to rank loss of the matrix involved, simply by calculating the rank of the matrix will help in the detection of singularities.
+%     But these methods are inefficient, do not have sufficient reasoning and there is no separation of concerns.
+\end{abstract}
+
+
+\begin{acknowledgements}
+I would like to express my sincere gratitude to Prof. Dr. Paul Pl{\"o}ger for his beneficial feedback and support.\\
+
+I would like to specially thank M.Sc. Sven Schneider for his continuous support throughout the project. With his patience and immense knowledge in the field has helped me learn a lot in this research. As an advisor, his help is more than I could acknowledge for here. I would also like to thank Djorje Vuckevic for his helpful comments throughout the project.\\
+
+
+Finally, I would like to thank my family and friends for their love, guidance and endless support in whatever I pursue.
+\end{acknowledgements}
+
+
+\tableofcontents
+\listoffigures
+\listoftables
+
+\chapter*{List of symbols}
+\begin{longtable}{@{}p{1.8cm}@{}p{1cm}@{}p{\dimexpr\textwidth-3cm\relax}@{}} \vspace{3mm}
+	\nomenclature{$M$}{}{Inertia matrix that maps between joint space domain and force domain} \vspace{3mm}
+	\nomenclature{$\ddot{X}$}{}{Cartesian level acceleration} 		\vspace{3mm}
+	\nomenclature{$H$}{}{Rigid body inertia} 	\vspace{3mm}
+	\nomenclature{$q,\dot{q},\ddot{q}$}{}{Joint position, velocity,acceleration vectors} 	\vspace{3mm}
+	\nomenclature{$\nu$}{}{Lagranage multiple(vector of magnitude of constraint forces)} 	\vspace{3mm}
+		\nomenclature{$A_{N}$}{}{ Matrix of unit constraint forces} 	\vspace{3mm}
+	\nomenclature{$b_{N}$}{}{Matrix denotes the vector of acceleration energy for segment N} 	\vspace{3mm}
+	\nomenclature{$C(q,\dot q)$}{}{Coriolis and centrifugal force vector} 	\vspace{3mm}
+	\nomenclature{$d$}{}{Joint rotor inertia}	 	\vspace{3mm}	
+	\nomenclature{$P$}{}{Control Plant iTASC control scheme} 	\vspace{3mm}
+	\nomenclature{$C$}{}{Control block iTASC control scheme} 	\vspace{3mm}
+	\nomenclature{$M+E$}{}{Block representing Model update and Estimation in iTASC control scheme}		\vspace{3mm}
+	\nomenclature{$X_{u}$}{}{Geometric disturbances as input to iTASC control scheme} 	\vspace{3mm}
+	\nomenclature{$y$}{}{System output iTASC control scheme} 	\vspace{3mm}
+	\nomenclature{$z$}{}{Sensors measurements in iTaSC control scheme}		\vspace{3mm}
+	\nomenclature{$K$}{}{Feedback term iTASC}		\vspace{3mm}
+	\nomenclature{$\tau_{a}$}{}{Joint space input forces}		\vspace{3mm}
+	\nomenclature{$S$}{}{Motion subspace matrix}		\vspace{3mm}
+	\nomenclature{$F^{ext}$}{}{External force applied on rigid body} \vspace{3mm}
+	\nomenclature{$F_{bias}$}{}{Bias force acting on rigid body which takes into account Coroilis, centrifugal effects and external forces} \vspace{3mm}
+	\nomenclature{$d$}{}{Joint rotor} \vspace{3mm}
+	\nomenclature{$P^{A}$}{}{Projection operator, projects inertia and forces for articulated body} \vspace{3mm}
+	\nomenclature{$X_{f}$}{}{Feature co-ordinates in iTASC control scheme}\vspace{3mm}
+%	\nomenclature{$l(q,X_{f},X_{u})$}{}{loop closure equation in iTASC control scheme} \vspace{3mm}
+	\nomenclature{$r$}{}{Penalty function which is optimized - iTASC control scheme} 	\vspace{3mm}
+	\nomenclature{$\times, \times^*$}{}{Operators representing spatial cross products} 	\vspace{3mm}
+	\nomenclature{$(.)^{T}$}{}{Operator representing matrix transpose} 	\vspace{3mm}
+	\nomenclature{$(.)^{-1}$}{}{Operators representing matrix inverse} 	\vspace{3mm}
+%	\nomenclature{	${}^{i+1}_{i}X, {}^{i+1}_{i}X^*$}{}{Co-ordinate transformation} 	\vspace{3mm}
+	\nomenclature{$E$}{}{Rotation matrix - spatial coordinates} 	\vspace{3mm}
+	\nomenclature{$\omega$}{}{Angular velocity vector- three components} 	\vspace{3mm}
+	\nomenclature{$v$}{}{Linear velocity vector- three components} 	\vspace{3mm}
+	\nomenclature{$I(q)$}{}{Joint space inertia matrix} 	\vspace{3mm}
+	\nomenclature{$\Lambda$}{}{Operational space matrix} 	\vspace{3mm}
+	\nomenclature{$F_{c}$}{}{Constraint force} 	\vspace{3mm}
+	\nomenclature{$E_{present}$}{}{Current acceleration energy generated by bias forces, external forces or joint torques} 	\vspace{3mm}
+	\nomenclature{$E_{required}$}{}{Acceleration energy required to satisfy constraints in solver} 	\vspace{3mm}
+	\nomenclature{$\mathcal{L}$}{}{Constraint coupling matrix} 	\vspace{3mm}
+%	\nomenclature{$\overline{\mathcal{L}}$}{}{Updated rank one factor of constraint coupling matrix} 	\vspace{3mm}
+\end{longtable}
+
+\chapter*{Acronymns}
+\begin{table}[ht!]
+\centering
+\begin{tabular}{lll}
+\hline
+\textbf{Abbreviation} &   & \textbf{Full forms}                  \\ \hline
+ABA                   & = & Articulated Body Algorithm           \\ 
+ADAMS                 & = & Automated Dynamic Analysis of Mechanical Systems\\
+DART                  & = & Dynamic Animation and Robotics Toolkit \\
+ODE                   & = & Open Dynamics Engine \\
+KDL                   & = & Kinematics and Dynamics Library\\
+CRBA                  & = & Composite Rigid Body Algorithm \\
+RNEA                  & = & Recursive Newton Euler Algorithm\\
+MujoCo                & = & Multi-Joint dynamics with Contact    \\ 
+WBC                   & = & Whole Body Control                   \\ 
+WBOSC                 & = & Whole Body Operational Space Control \\ 
+OCP	& = &           Optimization control problem                           \\ 
+DE &=& Differential Equation\\
+OSF	& = &        Operational space formulation                               \\ 
+SVD	& = &     Singular Value Decomposition                          \\ 
+DLS	& = &  Damped Least Squares                                \\ 
+RRQR & = & Rank Revealing QR decomposition \\
+LDL & = & Cholesky Decomposition \\ 
+HAL & = & Hardware Abstraction Layer \\
+GIK & = & Generalized Inverted Kinematics \\
+SOT & = & Stack of Tasks \\
+RBDL & = & Rigid Body Dynamics Library \\ \hline
+
+\end{tabular}
+\end{table}
+
+
+%	\begin{enumerate}
+%	\item \textbf{COM} = 
+%	\item \textbf{ABA} = Articulated Body Algorithm 
+%	\item \textbf{MujoCo} = Multi-Joint dynamics with Contact
+%	\item \textbf{WBC} = Whole Body Control
+%	\item \textbf{WBOSC} = Whole Body Operational Space Contro
+%	\item \textbf{OCP} = Optimization control problem
+%	\item \textbf{OSF} = Operational space formulation
+%	\item \textbf{SVD} = Singular Value Decomposition
+%	\item \textbf{DLS} = Damped Least Squares
+%	\item \textbf{RRQR} = Rank Revealing QR decomposition
+	
+
+	
+%\end{enumerate}
+
+%\chapter*{List of symbols}
+%-------------------------------------------------------------------------------
+%	CONTENT CHAPTERS
+%-------------------------------------------------------------------------------
+
+\mainmatter % Begin numeric (1,2,3...) page numbering
+
+\pagestyle{mainmatter}
+\subfile{chapters/ch01_introduction}
+\subfile{chapters/ch02_stateoftheart}
+\subfile{chapters/ch03_problemformulation}
+\subfile{chapters/ch04_popov}
+\subfile{chapters/ch05_methodology}
+%\subfile{chapters/ch06_solution}
+\subfile{chapters/ch07_evaluation}
+%%\subfile{chapters/ch08_results}
+\subfile{chapters/ch09_conclusion}
+
+
+%-------------------------------------------------------------------------------
+%	APPENDIX
+%-------------------------------------------------------------------------------
+%
+\begin{appendices}
+\subfile{chapters/appendix}
+
+\end{appendices}
+
+\backmatter
+
+%-------------------------------------------------------------------------------
+%	BIBLIOGRAPHY
+%-------------------------------------------------------------------------------
+\addcontentsline{toc}{chapter}{References}
+\bibliographystyle{plainnat} % Use the plainnat bibliography style
+\bibliography{Bibliography.bib} % Use the bibliography.bib file as the source of references
+
+\end{document}

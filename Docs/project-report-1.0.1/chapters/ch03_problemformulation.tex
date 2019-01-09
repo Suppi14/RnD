@@ -1,0 +1,16 @@
+%!TEX root = ../LastNameI-[RnD-MT]Report.tex
+
+\chapter{Problem Formulation}
+\label{Problem statement}
+The existing methods for detecting singularity are based on kinematic level. Here, there is no consideration of arm dynamics. Though it can be applied to build theoretical design of manipulator and be able to perform singularity avoidance. It may not be applicable for complicated arm designs and also not applicable for designing arm in detail or for higher speed and also high-speed motion control \cite{yoshikawa1985dynamic}.
+% \color{blue}Although it has the advantage of being applicable to the conceptual design of arm mechanisms and control of singularity avoidance without taking into account complicated arm dynamics. 
+
+
+All the calculations were previously performed on the Jacobian matrix, however, on another side, different types of hybrid dynamic solvers, such as Popov-Vereshchagin algorithm, are derived from optimization problem, which results in the absence of Jacobian matrix and requires other means of detection. However, detection of singularities at runtime on an algorithmic level can be performed. This can be done by inspecting the matrices related to the robot's dynamics. Since each singularity is associated to rank loss of the matrix involved, simply by calculating the rank of the matrix will help in the detection of singularities. Another possibility to measure the distance from singular configuration is calculating the condition number of the matrix. However, these methods have the following drawbacks:
+\begin{itemize}
+	\item\textbf{Inefficiency}: To compute the determinant on an $n\times6$ matrix with a complexity of O$(n^3)$.
+	\item\textbf{Insufficient Reasoning}: To detect at which joint is the singularity first noticed. Also to ensure if the singularity interferes with the task.
+	\item\textbf{Constrained task conflict}: It can also be recognized that the assigned tasks cause the occurrence of singularities. The desired motion of end effector is affected by constrained task conflicts \cite{Chiaverini1997}.
+	\item\textbf{Separation of concerns}: There should be  a separation of concerns in mechanism and policy, which is not present in the current state of the art. When there are means to detect singular configuration the decision of exploiting this knowledge is made by others.
+\end{itemize}
+The procedure involved will also assist in actually measuring the expensiveness to perform tasks in the joint space, i.e cost in terms of energy usage. In non singular configurations the cost is low, as the usage on energy is comparatively less than in singular configurations, because a small motion in the end effector will require high velocities in joint space. 

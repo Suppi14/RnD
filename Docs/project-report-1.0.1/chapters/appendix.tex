@@ -1,0 +1,186 @@
+%!TEX root = ../LastNameI-[RnD-MT]Report.tex
+
+\chapter{Appendix A}
+\section{Pl\"ucker co-ordinates representation for spatial vectors}
+\label{plucker}
+These co-ordinates represent the 6D spatial vectors, which can be both velocities and forces. This representation involves combination of angular and linear elements \cite{featherstone2014rigid}.
+\par 
+In general cases the pl\"ucker co-ordinate representation of a motion vector ($M^6$) and force vector($F^6$) can be given as in \cite{featherstone2014rigid}:
+\[
+M =
+\begin{bmatrix}
+m_{l,x} \\ m_{l,y}\\ m_{l,z} \\ m_{a,x} \\ m_{a,y} \\ m_{a,z}
+\end{bmatrix}
+F =
+\begin{bmatrix}
+f_{l,x} \\ f_{l,y}\\ f_{l,z} \\ f_{a,x} \\ f_{a,y} \\ f_{a,z}
+\end{bmatrix}
+\]
+Here the first three elements of both the vectors represent the linear components and then followed by the angular components.\\
+In case of velocities the linear and angular velocities are represented by symbols $v$ and $\omega$ which are represented as two 3D vectors. The spatial accelerations are derivatives of velocities which are represented by symbols $\dot{v}$ and $\dot{\omega}$ as linear and angular accelerations
+\[ \dot{X} =
+\begin{bmatrix}
+v_x \\ v_y\\ v_z \\ w_x \\ w_y \\ w_z
+\end{bmatrix} 
+ \ddot{X} =
+\begin{bmatrix}
+\dot{v_x} \\ \dot{v_y}\\ \dot{v_z} \\ \dot{w_x} \\ \dot{w_y} \\ \dot{w_z}
+\end{bmatrix} \]
+%\chapter{B}
+%Your second chapter appendix
+\section{Spatial Co-ordinates}
+\label{Spatial}
+This section gives more information on co-ordination transformation of force and motion vectors and their representations.\\
+The co-ordinate transformation of motion vector from A to B co-ordinates can be represented as ${}^{B}X_{A}$. This can be represented as in \cite{featherstone2014rigid}:
+\[ {}^{B}X_{A} =
+\begin{bmatrix}
+	E & 0 \\ -Er\times & E
+\end{bmatrix}
+\]
+The co-ordinate transformation of a force vector from A to B co-ordinates can be represented as ${}^{B}X^{*}_{A}$ :
+\[{}^{B}X^{*}_{A} =
+\begin{bmatrix}
+E & -Er\times\\ 0 & E
+\end{bmatrix}
+\]
+The above matrices represents product of translation by r of $3\times1$ position (translational) vector and rotation by E which is a matrix with size of $3\times3$. The operator "$\times$" maps from r to $3\times3$ matrix. This can be represented as:
+\[ r\times =
+\begin{bmatrix}
+x \\ y \\ z
+\end{bmatrix} \times = 
+\begin{bmatrix}0 & -z & y \\ z & 0 & -x\\-y & x & 0\end{bmatrix}
+\]
+The co-ordinate transformation matrix thus has the size of $6\times6$.
+
+ 
+\section{Spatial cross product}
+\label{cross}
+The two operators $\times$ and $\times^*$ are necessary to represent the cross products for both motion and force vectors separately. They can be represented through the same relation as mentioned for the spatial co-ordinates. Both the operators act as dual to the other. The $6\times6$ matrix representation of $\dot{X}\times$ and $\dot{X}\times^*$ is given as in \cite{featherstone2014rigid}:
+\[ \dot{X}\times =
+\begin{bmatrix}
+\omega\\ v
+\end{bmatrix} \times = 
+\begin{bmatrix}
+\omega\times & 0\\ v\times & \omega\times
+\end{bmatrix}
+\]
+\[ \dot{X}\times^* =
+\begin{bmatrix}
+\omega\\ v
+\end{bmatrix} \times^* = 
+\begin{bmatrix}
+\omega\times & v\times\\ 0 & \omega\times
+\end{bmatrix}
+\]
+
+\chapter{Appendix B}
+\section{LDL rank one update}
+\label{ldl}
+The algorithm which has been used for rank one update of LDL is by Sentana \cite{sentana1999econometric}. They present an algorithm for to update symmetric factors of a positive semi definite matrix.
+
+The implementation details of the algorithm is listed below: \\
+
+\begin{algorithm}[H] \label{alg1}
+%	\TitleOfAlgo{Rank one update on LDL decomposition}
+	\SetAlgoLined
+	\SetKwInOut{Input}{Input}
+	\SetKwInOut{Output}{Output}
+	\Input{\ $\mathbf{\alpha^1= \alpha, \omega^1 = z, \ j=0, \ N=6}$}
+%	\Output{\ $\mathbf{\mathlarger{\mathlarger{\tau_{\textbf{ctrl}}}}}, \ \mathbf{ \ddot{q}, \ \ddot{X}}$}
+	
+
+	\SetKwBlock{Begin}{begin}{end}
+	\Begin{
+		{
+			\For{$\mathbf{i \ =  \ 0  \ \ to \  \ N}$}{
+				\If{$\omega^{j}_{j} \neq 0$}{
+					\If{$aD_{j} \neq 0$}{
+						$p = \omega_{j}^{j}$\;\vspace{2mm}
+						$aD_{new,j} = aD_{j} + \alpha p_{j}^{2}$\;\vspace{2mm}
+						$\beta_{j} = p_{j}\alpha^{j}/aD_{new,j}$\; \vspace{2mm}
+						$\alpha^{j+1} = aD_{j}\alpha^{j}/aD_{new,j}$\; \vspace{2mm}
+						\For{$\mathbf{r \ = \ j \  \ to \ N}$}{
+							$\omega_{r}^{j+1} = \omega_{r}^{j} - p_{j}aL_{r,j}$\; \vspace{2mm}
+							$aL_{new,r,j} = aL_{r,j} + \beta_{j}\omega_{r}^{j+1}$\; \vspace{2mm}
+							
+					}
+			}
+			\If{$aD_{j} = 0$}{
+				$p_{j} = \omega_{j}^{j}$\; \vspace{2mm}
+				$aD_{new,j} = \alpha p_{j}^{2}$\; \vspace{2mm}
+				$\beta_{j} = 1/p_{j}$\; \vspace{2mm}
+				\For{$\mathbf{r \ = \ j \  \ to \ N}$}{
+				$aL_{new,r,j} = \beta_{j}\omega_{r}^{j}$ \; \vspace{2mm}
+			}
+			\For{$\mathbf{i \ = \ j+1 \  \ to \ N}$}{
+				$aD_{new,i} = aD_{i}$\; \vspace{2mm}
+				\For{$\mathbf{r \ = \ i \  \ to \ N}$}{	
+				$aL_{new,r,i} = aL_{r,i}$\; \vspace{2mm}
+			}
+			}
+				{and stop}
+			}
+
+			}
+
+	}
+}
+}
+	\caption{Rank one update on LDL decomposition \cite{sentana1999econometric}}
+
+	\end{algorithm}
+
+\newpage
+\begin{algorithm}[H] \label{alg4}
+	%	\TitleOfAlgo{Rank one update on LDL decomposition}
+	\SetAlgoLined
+	\Begin{	
+	{else condition\\}
+			{
+				$aD_{new,j} = aD_{j}$\; \vspace{2mm}
+				$\alpha_{j+1} = \alpha_{j}$\; \vspace{2mm}
+				\For{$\mathbf{r \ = \ j \  \ to \ N}$}{
+					$\omega_{r}^{j+1} = \omega_{r}^{j}$\; \vspace{2mm}
+					$aL_{new,r,j} = aL_{r,j}$\; \vspace{2mm}
+				}
+			}
+		}
+		
+		\caption{continued. Rank one update on LDL decomposition \cite{sentana1999econometric}}
+\end{algorithm}
+%		\begin{algorithm}[H] 
+%			\Begin{
+%				$\alpha^1= \alpha, \omega^1 = z, j=0, N=6$ \\
+%				\vspace{1mm}
+%				\For{$\mathbf{i \ =  \ 0  \ \ to \  \ N}$}{
+%					if {$\omega^{j}_{j} \neq 0$\;\vspace{2mm}}{
+%						if {$aD_{j} \neq 0$}\;\vspace{2mm}{
+%							$p = \omega_{j}^{j}$\;\vspace{2mm}
+%							$aD_{new,j} = aD_{j} + alpha\timesp^{2}$\;\vspace{2mm}
+%						}
+%%					$\alpha = \frac{1}{D}$, $w = A_{i+1}^T S_{i+1}$\; \label{alg:alpha}
+%%					\vspace{2mm}
+%%					${\mathcal{L}_i = \mathcal{L}_{i+1} + A_{i+1}^T S_{i+1}D^{-1}_{i+1} S_{i+1}^T A_{i+1}}$\; \label{alg:L_ii}
+%%					\vspace{1mm}
+%%					%			    // Perform rank one update \\[1mm]
+%%					$\mathcal{L}^{'}_{L},\mathcal{L}^{'}_{D} = rank\_one\_update(\mathcal{L}_{L},\mathcal{L}_{D},\alpha,w)$\;\label{alg:rankone}
+%				}
+%				
+%%				\vspace{1mm}
+%%				%// Balance of acceleration energy at the base (\{0\} link)\\
+%%				$A = \mathcal{L}_{0}, x = -\nu, b = b_{N} - A^{T}_{0}\ddot{X}_{0} - U_{0}$ \label{init}\\
+%%				$\mathcal{L}D\mathcal{L}^{T}x = b$ \\
+%%				$D\mathcal{L}^{T}x= forwardsubstitution(\mathcal{L},b) = y$ \\
+%%				$\mathcal{L}^{T}x = D^{-1}y = z$ \\
+%%				$x = backwardsubstitution(\mathcal{L}^{T},z)$ \\
+%%				%			//forward substitution\\[1mm]
+%%				%			$\mathcal{L}^{'}_{L} y = b_{N}$ \;
+%%				%			//backward substitution\\[1mm]
+%%				%			$\mathcal{L}^{'}_{L} x = y $ \;
+%%				%			//Linear system of equation at the base\\[1mm]
+%%				%			${\mathcal-{L}_0 \nu + A_0^T \ddot{X}_0 - U_0 = b_N}$\; \label{alg:balance}
+%%				\vspace{1mm}
+%			}
+%		}
+%	
+%		\end{algorithm}

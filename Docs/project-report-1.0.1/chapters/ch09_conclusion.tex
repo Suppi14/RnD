@@ -1,0 +1,24 @@
+%!TEX root = ../LastNameI-[RnD-MT]Report.tex
+
+\chapter{Conclusions \& Future Scope}
+\label{conclusion}
+The existing Popov Vereshchagin hybrid dynamics solver has been extended to support the detection of singularities during the runtime. The approach involved in detecting singularities by evaluating and analysing the kinematic and dynamic state of the existing Popov Vereshchagin solver. Based on the evaluation presented in chapter \ref{Approach} the solver is now able:
+\begin{itemize}
+	\item To detect the singularity early during the runtime.
+	\item To determine the satisfiable task constraints and their equivalence with traditional singularities.
+\end{itemize} 
+
+
+The proposed methodology was tested in simulation with KUKA LWR model defined in OROCOS KDL with different joint configurations and different task constraints. The results have also shown that the knowledge of the detection mechanism can be exploited by others. Hence the separation of concerns has also been achieved as mentioned in chapter \ref{Problem statement}. Sufficient reasoning has been provided as to where singularity can be noticed early in the sweeps. In order to provide an efficient solution detection mechanism, benchmarking has been performed on the runtime complexities of different decomposition techniques.
+
+The future work aims at extending the solver to analyze more on projections, to find the major contributor to singularity early in the sweeps and also to detect if it is close to singularity. Also, currently work has been performed only on detecting singularities early and providing feedback to the exploit the decision. But the question still remains as to what is to be done with the decision, either avoid or exploit. The other future goals are to extend the work on different platforms such as mobile bases for detection singularities tree structured in kinematic chains. 
+%\begin{itemize}
+%	\item analysis on projections
+%	\item detect close to singularity in teleoperation use case
+%	\item work for different end effectors
+%	\item The exploitation of decision using the feedback
+%\end{itemize}
+%The drawback in the original solver, is that it is unable to detect run time singularities. The traditional methods of detecting singularities do not apply as the solver does not rely on the concepts of kinematics. Hence, in this project it necessitated the detection of singularity using dynamic primitives. Thus achieving separation of concerns where the decision of detection mechanism can be exploited by others. 
+
+%\section{Lessons learned}
+

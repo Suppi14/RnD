@@ -1,0 +1,35 @@
+\begin{table}[h!]
+	\begin{tabular}{@{}|l|l|l|l|l|l|l|l|l|@{}}
+		\toprule
+		\textbf{Properties}                       & \textbf{Sub properties}               & \textbf{LDL} & \textbf{LU} & \textbf{QR} & \textbf{SVD} & \textbf{RRQR} & \textbf{UTV} & \textbf{VSV} \\ \midrule
+		\textbf{Rank revealing}                   &                                       &              &             &             &              &               &              &              \\ \midrule
+		\textbf{Computational complexity}         &                                       &              &             &             &              &               &              &              \\ \midrule
+		\textbf{Numerical Stability}              &                                       &              &             &             &              &               &              &              \\ \midrule
+		\textbf{Ability to solve linear equation} &                                       &              &             &             &              &               &              &              \\ \midrule
+		\textbf{Unique decomposition}             &                                       &              &             &             &              &               &              &              \\ \midrule
+		\textbf{Rank one update}                  & 1) Handle with positive semi definite &              &             &             &              &               &              &              \\ \midrule
+		& 2) Exploits symmetric shape           &              &             &             &              &               &              &              \\ \bottomrule
+	\end{tabular}
+\end{table}
+
+%\begin{table}[]
+%	\begin{tabular}{|l|l|l|l|l|l|}
+%		\hline
+%		\textbf{Properties}                         & \textbf{LDL} & \textbf{LU} & \textbf{QR} & \textbf{SVD} & \textbf{RRQR} \\  \hline 
+%		Handle with positive semi definite & \checkmark    &  \checkmark \cite{abbasbandy2006lu} &    & \checkmark    &      \\ \hline
+%		Exploits symmetric shape           &  \checkmark   &  \checkmark  &    &     &  \checkmark  \cite{bischof1998computing}  \\ \hline
+%		Rank one update                    & \checkmark    &    & \checkmark   & \checkmark    &      \\ \hline
+%		Rank revealing                     &     &  \checkmark  & \checkmark   &  \checkmark   &   \checkmark \cite{boutsidis2009improved}  \\ \hline
+%		Computational complexity           &  \checkmark   &    &    &     &      \\ \hline
+%		Numerical Stability                &     &    &    & \checkmark    &      \\ \hline
+%		Able to solve linear equation	&  \checkmark   &    &    &     &      \\ \hline
+%	\end{tabular}
+%
+%\end{table}
+% Please add the following required packages to your document preamble:
+% \usepackage{booktabs}
+% Please add the following required packages to your document preamble:
+% \usepackacage{booktabs}
+
+
+
